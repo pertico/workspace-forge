@@ -43,26 +43,25 @@ if (-not (Get-Command winget -ErrorAction SilentlyContinue)) {
 # Asegurar que el PATH se refresca tras la instalación de winget
 $env:Path = [System.Environment]::GetEnvironmentVariable("Path", "Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path", "User")
 
-# ==========================================
-# PASO 1: Instalar 'just' (Task Runner)
-# ==========================================
-if (-not (Get-Command just -ErrorAction SilentlyContinue)) {
-    Write-Host "[+] Instalando 'just'..." -ForegroundColor Green
-    winget install Casey.Just --silent --accept-package-agreements --accept-source-agreements
+# Instalar 'scoop (Scoop - The Command-Line Installer for Windows)'
+if (-not (Get-Command scoop -ErrorAction SilentlyContinue)) {
+    Write-Host "[+] Instalando 'scoop'..." -ForegroundColor Green
+    Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+    Invoke-RestMethod -Uri https://get.scoop.sh | Invoke-Expression
     $env:Path = [System.Environment]::GetEnvironmentVariable("Path", "Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path", "User")
+    scoop bucket add extras
+} else {
+    Write-Host "[*] 'scoop' ya está instalado." -ForegroundColor Cyan
+}
+
+# Instalar 'just' (Just a command runner)
+if (-not (Get-Command just -ErrorAction SilentlyContinue)) {
+    Write-Host "[+] Instalando 'just' (Just a command runner)..." -ForegroundColor Green
+    # winget install Casey.Just --silent --accept-package-agreements --accept-source-agreements
+    # $env:Path = [System.Environment]::GetEnvironmentVariable("Path", "Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path", "User")
+    scoop install just
 } else {
     Write-Host "[*] 'just' ya está instalado." -ForegroundColor Cyan
 }
 
-# ==========================================
-# PASO 2: Instalar 'dra' (GitHub releases downloader)
-# ==========================================
-if (-not (Get-Command dra -ErrorAction SilentlyContinue)) {
-    Write-Host "[+] Instalando 'dra'..." -ForegroundColor Green
-    winget install devmatteini.dra --silent --accept-package-agreements --accept-source-agreements
-    $env:Path = [System.Environment]::GetEnvironmentVariable("Path", "Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path", "User")
-} else {
-    Write-Host "[*] 'dra' ya está instalado." -ForegroundColor Cyan
-}
-
-Write-Host "[✔] Bootstrap en Windows completado con éxito. ¡Todo listo para usar 'just'!" -ForegroundColor Green
+Write-Host "[✔] Bootstrap en Windows completado con éxito." -ForegroundColor Green
