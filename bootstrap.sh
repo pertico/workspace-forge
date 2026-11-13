@@ -7,23 +7,30 @@ NC='\033[0m' # No Color
 
 echo -e "${GREEN}[+] Iniciando bootstrap de workspace-forge...${NC}"
 
-# Instalar ubi (The Universal Binary Installer) si no está presente
-if ! command -v ubi &> /dev/null; then 
-    echo -e "${GREEN}[+] Instalando 'ubi' (The Universal Binary Installer)...${NC}"
-    curl --silent --location \
-        https://raw.githubusercontent.com/houseabsolute/ubi/master/bootstrap/bootstrap-ubi.sh |
-        sudo sh
+# Instalar homebrew/linuxbrew
+if ! command -v brew &> /dev/null; then
+    echo -e "${GREEN}[+] Instalando 'homebrew/linuxbrew'...${NC}"
+    curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh | bash -s -- --path ~/.linuxbrew
+    echo 'eval "$(~/.linuxbrew/bin/brew shellenv bash)"' > /home/rgm/.bashrc.d/50_linuxbrew.bashrc
 else
-    echo "[*] 'ubi' ya está instalado."
+    echo "[*] 'homebrew/linuxbrew' ya está instalado."
 fi
 
-# Instalar 'just' (Just a command runner) si no está presente
-if ! command -v just &> /dev/null; then
-    echo -e "${GREEN}[+] Instalando 'just' (Just a command runner)...${NC}"
-    # sudo ubi --project casey/just --to /usr/local/bin
-    curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh | sudo bash -s -- --to /usr/local/bin
+# Instalar mise
+if ! command -v mise &> /dev/null; then
+    echo -e "${GREEN}[+] Instalando 'mise'...${NC}"
+    curl -fsSL https://mise.run | sh
+    echo "eval \"\$(~/.local/bin/mise activate bash)\"" > ~/.bashrc.d/50_mise.bashrc
 else
-    echo "[*] 'just' ya está instalado."
+    echo "[*] 'mise' ya está instalado."
+fi
+
+# Instalar chezmoi
+if ! command -v mise &> /dev/null; then
+    echo -e "${GREEN}[+] Instalando 'chezmoi'...${NC}"
+    sh -c "$(curl -fsLS https://get.chezmoi.io)" -- -b ~/.local/bin
+else
+    echo "[*] 'chezmoi' ya está instalado."
 fi
 
 echo -e "${GREEN}[✔] Bootstrap completado con éxito.${NC}"

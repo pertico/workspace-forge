@@ -54,14 +54,4 @@ if (-not (Get-Command scoop -ErrorAction SilentlyContinue)) {
     Write-Host "[*] 'scoop' ya está instalado." -ForegroundColor Cyan
 }
 
-# Instalar 'just' (Just a command runner)
-if (-not (Get-Command just -ErrorAction SilentlyContinue)) {
-    Write-Host "[+] Instalando 'just' (Just a command runner)..." -ForegroundColor Green
-    # winget install Casey.Just --silent --accept-package-agreements --accept-source-agreements
-    # $env:Path = [System.Environment]::GetEnvironmentVariable("Path", "Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path", "User")
-    scoop install just
-} else {
-    Write-Host "[*] 'just' ya está instalado." -ForegroundColor Cyan
-}
-
 Write-Host "[✔] Bootstrap en Windows completado con éxito." -ForegroundColor Green
